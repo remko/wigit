@@ -2,6 +2,18 @@
   require_once('classTextile.php');
   require_once('config.php');
 
+  function getAuthor($user) {
+    global $AUTHORS;
+
+    if (isset($AUTHORS[$user])) {
+      return $AUTHORS[$user];
+    }
+    else if ($user != "") {
+      return "$user <$user@wiggit>";
+    }
+    return $DEFAULT_AUTHOR;
+  }
+
 	function getHTTPUser() {
 		// This code is copied from phpMyID. Thanks to the phpMyID dev(s).
 		if (function_exists('apache_request_headers') && ini_get('safe_mode') == false) {
@@ -25,7 +37,7 @@
 			$hdr = array();
 			preg_match_all('/(\w+)=(?:"([^"]+)"|([^\s,]+))/', $digest, $mtx, PREG_SET_ORDER);
 			foreach ($mtx as $m) {
-				if ($m[1] == "user") {
+				if ($m[1] == "username") {
 					return $m[2] ? $m[2] : str_replace("\\\"", "", $m[3]);
 				}
 			}
@@ -42,10 +54,11 @@
 		$output = array();
 		$result;
 		exec($gitCommand, $output, $result);
-		if ($result != 0) {
-			print_r("Result: $result");
-			print_r($output);
-			return 0;
+    // FIXME: The -1 is a hack to avoid 'commit' on an unchanged repo to
+    // fail.
+		if ($result != 0 && $result != 1) {
+      print "Error running " . $gitCommand;
+      print "Error code: " . $result;
 		}
 		return 1;
 	}
@@ -88,29 +101,32 @@
 	$wikiFile = $DATA_DIR . "/" . $resource["page"];
 	$wikiFile = $wikiFile;
 	$wikiPage = $resource["page"];
-	$wikiPageViewURL = "$URL_PREFIX/$wikiPage";
-	$wikiPageEditURL = "$URL_PREFIX/$wikiPage/edit";
+	$wikiPageViewURL = "$SCRIPT_URL/$wikiPage";
+	$wikiPageEditURL = "$SCRIPT_URL/$wikiPage/edit";
 	$wikiCSS = $CSS;
-	$wikiHome = "$URL_PREFIX/";
+	$wikiHome = "$SCRIPT_URL/";
 	$wikiUser = $user;
 
 	if (isset($_POST['data'])) {
 		if (trim($_POST['data']) == "") {
 			// Delete
-			if (!file_exists($wikiFile)) {
-        header("Location: $wikiHome");
-				return;
-			}
+			if (file_exists($wikiFile)) {
+			  if (!git("rm $wikiPage")) { return; }
 
-			//TODO
+        $commitMessage = "Deleted $wikiPage";
+        $author = getAuthor($user);
+        if (!git("commit --message='$commitMessage' --author='$author'")) { return; }
+      }
+      header("Location: $wikiHome");
+      return;
 		}
 		else {
       $handle = fopen($wikiFile, "w");
-			fputs($handle, $_POST['data']);
+			fputs($handle, stripslashes($_POST['data']));
 			fclose($handle);
 
 			$commitMessage = "Changed $wikiPage";
-			$author = $DEFAULT_AUTHOR;
+			$author = getAuthor($user);
 			if (!git("init")) { return; }
 			if (!git("add $wikiPage")) { return; }
 			if (!git("commit --message='$commitMessage' --author='$author'")) { return; }
@@ -123,7 +139,7 @@
     // Viewing
     if ($resource["type"] == "view") {
       if (!file_exists($wikiFile)) {
-        header("Location: " . $URL_PREFIX . "/" . $resource["page"] . "/edit");
+        header("Location: " . $SCRIPT_URL . "/" . $resource["page"] . "/edit");
         return;
       }
 
@@ -152,7 +168,7 @@
 
 			// Put in template
 			$wikiData = $data;
-			$wikiPagePostURL = "$URL_PREFIX/$wikiPage";
+			$wikiPagePostURL = "$SCRIPT_URL/$wikiPage";
 			include('templates/edit.php');
     }
     // Error

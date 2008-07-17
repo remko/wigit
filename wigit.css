@@ -16,6 +16,14 @@ a:hover {
 	text-decoration: underline; 
 }
 
+acronym, abbr, span.caps {
+  cursor: help;
+}
+
+acronym, abbr {
+  border-bottom: 1px dashed #999;
+}
+
 #navigation p {
 	margin: 0;
 	padding: 0;
