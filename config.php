@@ -1,12 +1,15 @@
 <?php
-	$DATA_DIR = "data";
-	$DEFAULT_PAGE = "Home";
-	$BASE_URL = "/wigit";
-	$SCRIPT_URL = "$BASE_URL";
-	#$SCRIPT_URL = "$BASE_URL/index.php?r=";
-	$CSS = "$BASE_URL/wigit.css";
-	$TITLE = "WiGit";
 	$GIT = "/usr/local/git/bin/git";
+	$BASE_URL = "/wigit";
+	#$SCRIPT_URL = "$BASE_URL/index.php?r=";
+	$SCRIPT_URL = "$BASE_URL";
+
+	$TITLE = "WiGit";
+	$DEFAULT_PAGE = "Home";
+	$CSS = "$BASE_URL/wigit.css";
+
+	$DATA_DIR = "data";
+
 	$DEFAULT_AUTHOR = 'Anonymous <anonymous@wigit>';
   $AUTHORS = array(
     "remko" => "Remko Tronçon <git@el-tramo.be>",
