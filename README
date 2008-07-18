@@ -13,7 +13,7 @@ Features
 --------
 * Very simple and light
 * Easily customizable
-* Extensive syntax for marking up text
+* Extensive syntax for marking up text (using Textile)
 * Full history tracking support
 * Basic support for users/authors, by using the HTTP authentication headers 
   to extract the user.

@@ -6,12 +6,16 @@
 	</head>
 	<body>
 		<div id="navigation">
-			<p><a href="<?php print $wikiHome ?>">Home</a></p>
+			<p><a href="<?php print $wikiHome ?>">Home</a> 
+			| <a href="<?php print $wikiHistoryURL ?>">History</a>
+			<?php if ($wikiUser != "") { ?>| Logged in as <?php print $wikiUser; } ?>
+			</p>
 		</div>
 
 		<div id="header">
 			<h1 id="title"><?php print $wikiPage ?></h1>
-			<p><a href="<?php print $wikiPageEditURL?>">(edit)</a></p>
+			<p>[ <a href="<?php print $wikiPageEditURL?>">edit</a> | 
+				   <a href="<?php print $wikiPageHistoryURL?>">history</a> ]</p>
 		</div>
 
 		<div id="content">
@@ -20,10 +24,6 @@
 
 		<div id="footer">
 			<p>Last modified on <?php print date("F d Y H:i:s", filemtime($wikiFile)); ?> </p>
-			<?php if ($wikiUser != "") { ?>
-				<p>Logged in as <?php print $wikiUser; ?></p>
-			<?php } ?>
 		</div>
 	</body>
 </html>
-

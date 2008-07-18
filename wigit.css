@@ -28,6 +28,7 @@ acronym, abbr {
 	margin: 0;
 	padding: 0;
 	font-size: .8em;
+	text-align: right;
 }
 
 #header {
@@ -87,4 +88,25 @@ acronym, abbr {
 	padding: .5em;
 	background-color: #ddd;
 	margin: 0em;
+}
+
+#history {
+	margin-top: 20pt;
+	margin-bottom: 20pt;
+	text-align: center;
+}
+
+#history table {
+	border-collapse: collapse;
+}
+
+#history td {
+	padding-left: 10pt;
+	padding-right: 10pt;
+	border-top: dashed thin gray;
+	border-bottom: dashed thin gray;
+}
+
+#history td.author {
+	text-align: center;
 }
