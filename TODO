@@ -1,0 +1,22 @@
+Backend
+-------
+- Add history pages
+- Add diffs to history
+- GC git history
+- Provide the option to truncate history
+- Auto-link plain-text links
+- Wikify links
+- Auto-insert newline after h?
+- Add section edit links ?
+- Try to parse page in history, and link to it
+
+Default theme
+-------------
+- Put 'logged in' thingy on the top right
+- Make the form as high as possible
+- Add Tables to the CSS
+- Provide some documentation for the wiki syntax
+
+ExtJS theme
+-----------
+- Create
