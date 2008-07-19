@@ -1,9 +1,9 @@
 <?php
 	$GIT = "/usr/local/git/bin/git";
-	#$BASE_URL = "/wigit";
+	$BASE_URL = "/~remko/wigit";
 
-	#$SCRIPT_URL = "$BASE_URL/index.php?r=";
-	$SCRIPT_URL = "$BASE_URL";
+	$SCRIPT_URL = "$BASE_URL/index.php?r=";
+	#$SCRIPT_URL = "$BASE_URL";
 
 	//$TITLE = "WiGit";
 	//$DEFAULT_PAGE = "Home";

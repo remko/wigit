@@ -1,7 +1,7 @@
 <?php 
 	require_once('classTextile.php');
 
-	// Default configuration
+	// Default configuration. FIXME: use isset() and move after source config.php
 	$GIT = "git";
 	$BASE_URL = "/wigit";
 	$SCRIPT_URL = "$BASE_URL/index.php?r=";
@@ -37,7 +37,7 @@
 	}
 
 	function getAuthorForUser($user) {
-		global $AUTHORS;
+		global $AUTHORS, $DEFAULT_AUTHOR;
 
 		if (isset($AUTHORS[$user])) {
 			return $AUTHORS[$user];
