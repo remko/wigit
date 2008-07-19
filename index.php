@@ -156,6 +156,7 @@
 				$commitMessage = addslashes("Deleted $wikiPage");
 				$author = addslashes(getAuthorForUser($user));
 				if (!git("commit --message='$commitMessage' --author='$author'")) { return; }
+				if (!git("gc")) { return; }
 			}
 			header("Location: $wikiHome");
 			return;
@@ -171,6 +172,7 @@
 			if (!git("init")) { return; }
 			if (!git("add $wikiPage")) { return; }
 			if (!git("commit --message='$commitMessage' --author='$author'")) { return; }
+			if (!git("gc")) { return; }
 			header("Location: $wikiPageViewURL");
 			return;
 		}

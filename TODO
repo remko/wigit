@@ -1,18 +1,15 @@
 Backend
 -------
-- Add history pages
+- Try to parse page in history, and link to it
+- Add link to retrieve a revision of a page
 - Add diffs to history
-- GC git history
-- Provide the option to truncate history
 - Auto-link plain-text links
 - Wikify links
 - Auto-insert newline after h?
 - Add section edit links ?
-- Try to parse page in history, and link to it
 
 Default theme
 -------------
-- Put 'logged in' thingy on the top right
 - Make the form as high as possible
 - Add Tables to the CSS
 - Provide some documentation for the wiki syntax
