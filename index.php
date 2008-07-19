@@ -1,20 +1,18 @@
 <?php 
 	require_once('classTextile.php');
 
-	// Default configuration. FIXME: use isset() and move after source config.php
-	$GIT = "git";
-	$BASE_URL = "/wigit";
-	$SCRIPT_URL = "$BASE_URL/index.php?r=";
-	$TITLE = "WiGit";
-	$DATA_DIR = "data";
-	$DEFAULT_PAGE = "Home";
-	$DEFAULT_AUTHOR = 'Anonymous <anonymous@wigit>';
-  $AUTHORS = array();
-
-	// Load user config
+	// Configuration
 	if (file_exists('config.php')) {
 		require_once('config.php');
 	}
+	if (!isset($GIT)) { $GIT = "git"; }
+	if (!isset($BASE_URL)) { $BASE_URL = "/wigit"; }
+	if (!isset($SCRIPT_URL)) { $SCRIPT_URL = "$BASE_URL/index.php?r="; }
+	if (!isset($TITLE)) { $TITLE = "WiGit"; }
+	if (!isset($DATA_DIR)) { $DATA_DIR = "data"; }
+	if (!isset($DEFAULT_PAGE)) { $DEFAULT_PAGE = "Home"; }
+	if (!isset($DEFAULT_AUTHOR)) { $DEFAULT_AUTHOR = 'Anonymous <anonymous@wigit>'; }
+  if (!isset($AUTHORS)) { $AUTHORS = array(); }
 
 	function wikify($text) {
 		return $text;
@@ -22,16 +20,31 @@
 
 	function getHistory($file = "") {
 		$output = array();
-		git("log --pretty=format:'%an>%ae>%aD>%s' -- $file", $output);
+		git("log --pretty=format:'%H>%T>%an>%ae>%aD>%s' -- $file", $output);
 		$history = array();
 		foreach ($output as $line) {
-			$logEntry = split(">", $line, 4);
+			$logEntry = explode(">", $line, 6);
+
+			// Find out which file was edited
+			$treeOutput = array();
+			if (!git("ls-tree ". $logEntry[1], $treeOutput) || sizeof($treeOutput) == 0) {
+				continue;
+			}
+			$page = end(split("\x09", $treeOutput[0]));
+
+			// Populate history structure
 			$history[] = array(
-				"author" => $logEntry[0], 
-				"email" => $logEntry[1],
-				"linked-author" => ($logEntry[1] == "" ? $logEntry[0] : "<a href=\"mailto:$logEntry[1]\">$logEntry[0]</a>"),
-				"date" => $logEntry[2], 
-				"message" => $logEntry[3]);
+					"author" => $logEntry[2], 
+					"email" => $logEntry[3],
+					"linked-author" => (
+							$logEntry[3] == "" ? 
+								$logEntry[2] 
+								: "<a href=\"mailto:$logEntry[3]\">$logEntry[2]</a>"),
+					"date" => $logEntry[4], 
+					"message" => $logEntry[5],
+					"page" => $page,
+					"commit" => $logEntry[0]
+				);
 		}
 		return $history;
 	}
@@ -128,6 +141,23 @@
 		return array("page" => $page, "type" => $type);
 	}
 
+	// --------------------------------------------------------------------------
+	// Utility functions (for use inside templates)
+	// --------------------------------------------------------------------------
+	
+	function getViewURL($page, $version = null) {
+		global $SCRIPT_URL;
+
+		if ($version) {
+			return "$SCRIPT_URL/$page/$version";
+		}
+		else {
+			return "$SCRIPT_URL/$page";
+		}
+	}
+
+	// --------------------------------------------------------------------------
+
 	// Get the page
 	$resource = parseResource($_GET['r']);
 
@@ -139,8 +169,8 @@
 	$wikiFile = $DATA_DIR . "/" . $resource["page"];
 	$wikiFile = $wikiFile;
 	$wikiPage = $resource["page"];
-	$wikiPageViewURL = "$SCRIPT_URL/$wikiPage";
 	$wikiPageEditURL = "$SCRIPT_URL/$wikiPage/edit";
+	$wikiPagePostURL = "$SCRIPT_URL/$wikiPage";
 	$wikiPageHistoryURL = "$SCRIPT_URL/$wikiPage/history";
 	$wikiHistoryURL = "$SCRIPT_URL/history";
 	$wikiCSS = $CSS;
@@ -173,7 +203,7 @@
 			if (!git("add $wikiPage")) { return; }
 			if (!git("commit --message='$commitMessage' --author='$author'")) { return; }
 			if (!git("gc")) { return; }
-			header("Location: $wikiPageViewURL");
+			header("Location: " . getViewURL($wikiPage));
 			return;
 		}
 	}
@@ -217,15 +247,34 @@
 
 			// Put in template
 			$wikiData = $data;
-			$wikiPagePostURL = "$SCRIPT_URL/$wikiPage";
 			include('templates/edit.php');
 		}
 		else if ($resource["type"] == "history") {
 			$wikiHistory = getHistory($wikiPage);
 			include('templates/history.php');
 		}
-		// Error
 		else {
+			// Try commit.
+			// FIXME: Try to put this in an else if
+			$output = array();
+			if (git("cat-file -p " . $resource["type"] . ":$wikiPage", $output)) {
+				$data = join("\n", $output);
+				// FIXME Factor this out
+				// Add wiki links and other transformations
+				$wikifiedData = wikify($data);
+
+				// Textilify
+				$textile = new Textile();
+				$formattedData = $textile->TextileThis($wikifiedData);
+
+				// Put in template
+				// FIXME: Remove edit links
+				$wikiContent = $formattedData;
+				include('templates/view.php');
+				return;
+			}
+
+			// Fallback
 			print "Unknown type: " . $resource["type"];
 		}
 	}

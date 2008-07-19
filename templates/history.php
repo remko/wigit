@@ -16,14 +16,15 @@
 
 		<div id="header">
 			<h1 id="title"><?php print $historyTitle ?></h1>
-			<p>[ <a href="<?php print $wikiPageViewURL?>">view</a> ]</p>
+			<p>[ <a href="<?php print getViewURL($wikiPage); ?>">view</a> ]</p>
 		</div>
 
 		<div id="history">
 			<table>
+				<tr><th>Date</th><th>Author</th><th>Page</th><th>Message</th></tr>
 			<?php 
 				foreach ($wikiHistory as $item) {
-					print "<tr><td>" . $item["date"] . "</td><td class='author'>" . $item["linked-author"] . "</td><td>" . $item["message"] . "</td></tr>\n";
+					print "<tr><td>" . $item["date"] . "</td><td class='author'>" . $item["linked-author"] . "</td><td>" . $item["page"] . "</td><td>" . $item["message"] . "</td><td>" . "<a href=\"" . getViewURL($item["page"], $item["commit"]) . "\">View</a></td><td>" . "</td></tr>\n";
 				}
 			?>
 			</table>
