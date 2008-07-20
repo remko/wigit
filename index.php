@@ -108,14 +108,18 @@
 		// FIXME: Only do the escaping and the 2>&1 if we're not in safe mode 
 		// (otherwise it will be escaped anyway).
 		// FIXME: Removed escapeShellCmd because it clashed with author.
+		$oldUMask = umask(0022);
 		exec($gitCommand . " 2>&1", $output, $result);
+		$umask = $oldUMask;
 		// FIXME: The -1 is a hack to avoid 'commit' on an unchanged repo to
 		// fail.
 		if ($result != 0 && $result != 1) {
 			// FIXME: HTMLify these strings
-			print "Error running " . $gitCommand;
-			print "Error message: " . join("\n", $output);
-			print "Error code: " . $result;
+			print "<h1>Error</h1>\n<pre>\n";
+			print "$" . $gitCommand . "\n";
+			print join("\n", $output) . "\n";
+			//print "Error code: " . $result . "\n";
+			print "</pre>";
 		}
 		return 1;
 	}
@@ -251,7 +255,7 @@
 
 				$commitMessage = addslashes("Deleted $wikiPage");
 				$author = addslashes(getAuthorForUser(getUser()));
-				if (!git("commit --message='$commitMessage' --author='$author'")) { return; }
+				if (!git("commit --allow-empty --no-verify --message='$commitMessage' --author='$author'")) { return; }
 				if (!git("gc")) { return; }
 			}
 			header("Location: $wikiHome");
