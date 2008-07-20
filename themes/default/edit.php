@@ -6,7 +6,10 @@
 	</head>
 	<body>
 		<div id="navigation">
-			<p><a href="<?php print getHomeURL() ?>">Home</a></p>
+			<p><a href="<?php print getHomeURL() ?>">Home</a> 
+			| <a href="<?php print getGlobalHistoryURL() ?>">History</a>
+			<?php if (getUser() != "") { ?>| Logged in as <?php print getUser(); } ?>
+			</p>
 		</div>
 
 		<div id="header">
@@ -18,12 +21,6 @@
 				<p><textarea name="data" cols="80" rows="20" style="width: 100%"><?php print $wikiData; ?></textarea></p>
 				<p><input type="submit" value="publish" /></p>
 			</form>
-		</div>
-
-		<div id="footer">
-			<?php if (getUser() != "") { ?>
-				<p>Logged in as <?php print getUser(); ?></p>
-			<?php } ?>
 		</div>
 
 	</body>

@@ -221,7 +221,8 @@
 	}
 
 	function getCSSURL() {
-		return getThemeDir() . "/style.css";
+		global $BASE_URL;
+		return "$BASE_URL/" . getThemeDir() . "/style.css";
 	}
 
 	function getThemeDir() {
