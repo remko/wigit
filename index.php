@@ -1,7 +1,10 @@
 <?php 
 	require_once('classTextile.php');
 
+	// --------------------------------------------------------------------------
 	// Configuration
+	// --------------------------------------------------------------------------
+
 	if (file_exists('config.php')) {
 		require_once('config.php');
 	}
@@ -13,6 +16,11 @@
 	if (!isset($DEFAULT_PAGE)) { $DEFAULT_PAGE = "Home"; }
 	if (!isset($DEFAULT_AUTHOR)) { $DEFAULT_AUTHOR = 'Anonymous <anonymous@wigit>'; }
   if (!isset($AUTHORS)) { $AUTHORS = array(); }
+
+
+	// --------------------------------------------------------------------------
+	// Helpers
+	// --------------------------------------------------------------------------
 
 	function wikify($text) {
 		return $text;
@@ -147,7 +155,6 @@
 	
 	function getViewURL($page, $version = null) {
 		global $SCRIPT_URL;
-
 		if ($version) {
 			return "$SCRIPT_URL/$page/$version";
 		}
@@ -156,26 +163,67 @@
 		}
 	}
 
+	function getPostURL() {
+		global $SCRIPT_URL;
+		$page = getPage();
+		return "$SCRIPT_URL/$page";
+	}
+
+	function getEditURL() {
+		global $SCRIPT_URL;
+		$page = getPage();
+		return "$SCRIPT_URL/$page/edit";
+	}
+
+	function getHistoryURL() {
+		global $SCRIPT_URL;
+		$page = getPage();
+		return "$SCRIPT_URL/$page/history";
+	}
+	
+	function getGlobalHistoryURL() {
+		global $SCRIPT_URL;
+		return "$SCRIPT_URL/history";
+	}
+
+	function getHomeURL() {
+		global $SCRIPT_URL;
+		return "$SCRIPT_URL/";
+	}
+
+	function getUser() {
+		global $wikiUser;
+		return $wikiUser;
+	}
+
+	function getTitle() {
+		global $TITLE;
+		return $TITLE;
+	}
+
+	function getPage() {
+		global $wikiPage;
+		return $wikiPage;
+	}
+
+
+	// --------------------------------------------------------------------------
+	// Initialize globals
 	// --------------------------------------------------------------------------
 
-	// Get the page
+	$wikiUser = getHTTPUser();
+
 	$resource = parseResource($_GET['r']);
-
-	// Get the HTTP user.
-	$user = getHTTPUser();
-
-	// Some common variables
-	$wikiTitle = $TITLE;
-	$wikiFile = $DATA_DIR . "/" . $resource["page"];
-	$wikiFile = $wikiFile;
 	$wikiPage = $resource["page"];
-	$wikiPageEditURL = "$SCRIPT_URL/$wikiPage/edit";
-	$wikiPagePostURL = "$SCRIPT_URL/$wikiPage";
-	$wikiPageHistoryURL = "$SCRIPT_URL/$wikiPage/history";
-	$wikiHistoryURL = "$SCRIPT_URL/history";
+	$wikiSubPage = $resource["type"];
+
+	$wikiFile = $DATA_DIR . "/" . $wikiPage;
 	$wikiCSS = $CSS;
-	$wikiHome = "$SCRIPT_URL/";
-	$wikiUser = $user;
+
+
+	// --------------------------------------------------------------------------
+	// Process request
+	// --------------------------------------------------------------------------
 
 	if (isset($_POST['data'])) {
 		if (trim($_POST['data']) == "") {
@@ -184,7 +232,7 @@
 				if (!git("rm $wikiPage")) { return; }
 
 				$commitMessage = addslashes("Deleted $wikiPage");
-				$author = addslashes(getAuthorForUser($user));
+				$author = addslashes(getAuthorForUser(getUser()));
 				if (!git("commit --message='$commitMessage' --author='$author'")) { return; }
 				if (!git("gc")) { return; }
 			}
@@ -198,7 +246,7 @@
 			fclose($handle);
 
 			$commitMessage = addslashes("Changed $wikiPage");
-			$author = addslashes(getAuthorForUser($user));
+			$author = addslashes(getAuthorForUser(getUser()));
 			if (!git("init")) { return; }
 			if (!git("add $wikiPage")) { return; }
 			if (!git("commit --message='$commitMessage' --author='$author'")) { return; }
@@ -210,13 +258,13 @@
 	// Get operation
 	else {
 		// Global history
-		if ($resource["page"] == "history") {
+		if ($wikiPage == "history") {
 			$wikiHistory = getHistory();
 			$wikiPage = "";
 			include('templates/history.php');
 		}
 		// Viewing
-		else if ($resource["type"] == "view") {
+		else if ($wikiSubPage == "view") {
 			if (!file_exists($wikiFile)) {
 				header("Location: " . $SCRIPT_URL . "/" . $resource["page"] . "/edit");
 				return;
@@ -239,7 +287,7 @@
 			include('templates/view.php');
 		}
 		// Editing
-		else if ($resource["type"] == "edit") {
+		else if ($wikiSubPage == "edit") {
 			if (file_exists($wikiFile)) {
 				$handle = fopen($wikiFile, "r");
 				$data = fread($handle, filesize($wikiFile));
@@ -249,7 +297,7 @@
 			$wikiData = $data;
 			include('templates/edit.php');
 		}
-		else if ($resource["type"] == "history") {
+		else if ($wikiSubPage == "history") {
 			$wikiHistory = getHistory($wikiPage);
 			include('templates/history.php');
 		}
@@ -257,7 +305,7 @@
 			// Try commit.
 			// FIXME: Try to put this in an else if
 			$output = array();
-			if (git("cat-file -p " . $resource["type"] . ":$wikiPage", $output)) {
+			if (git("cat-file -p " . $wikiSubPage . ":$wikiPage", $output)) {
 				$data = join("\n", $output);
 				// FIXME Factor this out
 				// Add wiki links and other transformations
@@ -275,7 +323,7 @@
 			}
 
 			// Fallback
-			print "Unknown type: " . $resource["type"];
+			print "Unknow subpage: " . $wikiSubPage;
 		}
 	}
 

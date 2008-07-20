@@ -110,3 +110,7 @@ acronym, abbr {
 #history td.author {
 	text-align: center;
 }
+
+#history td.page {
+	text-align: center;
+}
