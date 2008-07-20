@@ -16,6 +16,7 @@
 	if (!isset($DEFAULT_PAGE)) { $DEFAULT_PAGE = "Home"; }
 	if (!isset($DEFAULT_AUTHOR)) { $DEFAULT_AUTHOR = 'Anonymous <anonymous@wigit>'; }
   if (!isset($AUTHORS)) { $AUTHORS = array(); }
+  if (!isset($THEME)) { $THEME = "default"; }
 
 
 	// --------------------------------------------------------------------------
@@ -55,6 +56,11 @@
 				);
 		}
 		return $history;
+	}
+
+	function getThemeDir() {
+		global $THEME;
+		return "themes/$THEME";
 	}
 
 	function getAuthorForUser($user) {
@@ -206,6 +212,9 @@
 		return $wikiPage;
 	}
 
+	function getCSSURL() {
+		return getThemeDir() . "/style.css";
+	}
 
 	// --------------------------------------------------------------------------
 	// Initialize globals
@@ -261,7 +270,7 @@
 		if ($wikiPage == "history") {
 			$wikiHistory = getHistory();
 			$wikiPage = "";
-			include('templates/history.php');
+			include(getThemeDir() . "/history.php");
 		}
 		// Viewing
 		else if ($wikiSubPage == "view") {
@@ -284,7 +293,7 @@
 
 			// Put in template
 			$wikiContent = $formattedData;
-			include('templates/view.php');
+			include(getThemeDir() . "/view.php");
 		}
 		// Editing
 		else if ($wikiSubPage == "edit") {
@@ -295,11 +304,11 @@
 
 			// Put in template
 			$wikiData = $data;
-			include('templates/edit.php');
+			include(getThemeDir() . "/edit.php");
 		}
 		else if ($wikiSubPage == "history") {
 			$wikiHistory = getHistory($wikiPage);
-			include('templates/history.php');
+			include(getThemeDir() . "/history.php");
 		}
 		else {
 			// Try commit.
@@ -318,7 +327,7 @@
 				// Put in template
 				// FIXME: Remove edit links
 				$wikiContent = $formattedData;
-				include('templates/view.php');
+				include(getThemeDir() . "/view.php");
 				return;
 			}
 

@@ -4,7 +4,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title><?php print getTitle() ?> &raquo; <?php print $historyTitle ?></title>
-		<link rel="stylesheet" type="text/css" href="<?php print $wikiCSS ?>" />
+		<link rel="stylesheet" type="text/css" href="<?php print getCSSURL() ?>" />
 	</head>
 	<body>
 		<div id="navigation">
