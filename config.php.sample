@@ -1,17 +1,32 @@
 <?php
+	// Location of the Git binary
 	$GIT = "/usr/local/git/bin/git";
-	$BASE_URL = "/~remko/wigit";
 
+	// Base URL of the wigit instalation. This will be prepended to all links
+	// to internal files.
+	$BASE_URL = "/wigit";
+
+	// The script to which all requests should be passed. The default is 
+	// $BASE_URL/index.php?r= , which should work on all installations. If you
+	// want to use pretty URLs, set this to $BASE_URL. (see README)
 	$SCRIPT_URL = "$BASE_URL/index.php?r=";
-	#$SCRIPT_URL = "$BASE_URL";
+	//$SCRIPT_URL = "$BASE_URL";
 
-	//$TITLE = "WiGit";
-	//$DEFAULT_PAGE = "Home";
-	$CSS = "$BASE_URL/wigit.css";
+	// Title of the wiki
+	$TITLE = "WiGit";
 
-	//$DATA_DIR = "data";
+	// Home page. This page is linked in the navigation bar, and is the default
+	// page that will be opened.
+	$DEFAULT_PAGE = "Home";
 
-	//$DEFAULT_AUTHOR = 'Anonymous <anonymous@wigit>';
+	// Dir that contains the data files (i.e. the Git repository). This directory
+	// must be writable by the web server.
+	$DATA_DIR = "data";
+
+	// The default author of the git commits.
+	$DEFAULT_AUTHOR = 'Anonymous <anonymous@wigit>';
+
+	// Set the mappings from HTTP username to Git commit author.
   $AUTHORS = array(
     "remko" => "Remko Tronçon <git@el-tramo.be>",
     "guest" => "Guest <guest@el-tramo.be>"

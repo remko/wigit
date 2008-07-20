@@ -25,31 +25,30 @@
 
 	function getGitHistory($file = "") {
 		$output = array();
-		git("log --pretty=format:'%H>%T>%an>%ae>%aD>%s' -- $file", $output);
+		// FIXME: Find a better way to find the files that changed than --name-only
+		git("log --name-only --pretty=format:'%H>%T>%an>%ae>%aD>%s' -- $file", $output);
 		$history = array();
+		$historyItem = array();
 		foreach ($output as $line) {
 			$logEntry = explode(">", $line, 6);
-
-			// Find out which file was edited
-			$treeOutput = array();
-			if (!git("ls-tree ". $logEntry[1], $treeOutput) || sizeof($treeOutput) == 0) {
-				continue;
+			if (sizeof($logEntry) > 1) {
+				// Populate history structure
+				$historyItem = array(
+						"author" => $logEntry[2], 
+						"email" => $logEntry[3],
+						"linked-author" => (
+								$logEntry[3] == "" ? 
+									$logEntry[2] 
+									: "<a href=\"mailto:$logEntry[3]\">$logEntry[2]</a>"),
+						"date" => $logEntry[4], 
+						"message" => $logEntry[5],
+						"commit" => $logEntry[0]
+					);
 			}
-			$page = end(split("\x09", $treeOutput[0]));
-
-			// Populate history structure
-			$history[] = array(
-					"author" => $logEntry[2], 
-					"email" => $logEntry[3],
-					"linked-author" => (
-							$logEntry[3] == "" ? 
-								$logEntry[2] 
-								: "<a href=\"mailto:$logEntry[3]\">$logEntry[2]</a>"),
-					"date" => $logEntry[4], 
-					"message" => $logEntry[5],
-					"page" => $page,
-					"commit" => $logEntry[0]
-				);
+			else if (!isset($historyItem["page"])) {
+				$historyItem["page"] = $line;
+				$history[] = $historyItem;
+			}
 		}
 		return $history;
 	}
@@ -113,7 +112,7 @@
 		$umask = $oldUMask;
 		// FIXME: The -1 is a hack to avoid 'commit' on an unchanged repo to
 		// fail.
-		if ($result != 0 && $result != 1) {
+		if ($result != 0) {
 			// FIXME: HTMLify these strings
 			print "<h1>Error</h1>\n<pre>\n";
 			print "$" . $gitCommand . "\n";
@@ -162,7 +161,7 @@
 		// FIXME: Do not apply this in <pre> and <notextile> blocks.
 
 		// Linkify
-		$text = preg_replace('@[^:](https?://([-\w\.]+)+(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)?)@', '<a href="$1">$1</a>', $text);
+		$text = preg_replace('@([^:])(https?://([-\w\.]+)+(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)?)@', '$1<a href="$2">$2</a>', $text);
 
 		// WikiLinkify
 		$text = preg_replace('@\[([A-Z]\w+)\]@', '<a href="' . $SCRIPT_URL . '/$1">$1</a>', $text);
@@ -294,7 +293,7 @@
 			$author = addslashes(getAuthorForUser(getUser()));
 			if (!git("init")) { return; }
 			if (!git("add $wikiPage")) { return; }
-			if (!git("commit --message='$commitMessage' --author='$author'")) { return; }
+			if (!git("commit --allow-empty --no-verify --message='$commitMessage' --author='$author'")) { return; }
 			if (!git("gc")) { return; }
 			header("Location: " . getViewURL($wikiPage));
 			return;

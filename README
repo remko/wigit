@@ -31,7 +31,8 @@ Installation
 ------------
 * Put the WiGit dir in some place where the webserver can find it
 * Make sure there's a 'data' subdir, and that it is writable by the webserver
-* Edit config.php to reflect your local settings
+* Copy config.php.sample to config.php, and edit config.php to reflect your 
+  local settings
 * Surf to the wigit URL, and you should start by editing the front page
 
 For URL rewriting, change the SCRIPT_URL to be the base URL prefix (as 
