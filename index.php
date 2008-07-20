@@ -1,4 +1,11 @@
 <?php 
+
+	/* 
+	 * WiGit
+	 * (c) Remko Tronçon (http://el-tramo.be)
+	 * See COPYING for details
+	 */
+
 	require_once('classTextile.php');
 
 	// --------------------------------------------------------------------------
