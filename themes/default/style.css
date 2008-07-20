@@ -50,6 +50,11 @@ acronym, abbr {
 		margin: 0;
 }
 
+#content {
+	padding-top: 10pt;
+	padding-bottom: 10pt;
+}
+
 #content h1 {
 	 background-color: #7799BB;
 	 font-color: white;
@@ -80,14 +85,26 @@ acronym, abbr {
 	font-family: monospace;
 }
 
+#content table {
+	border-collapse: collapse;
+}
+
+#content td {
+	border: thin dashed gray;
+}
+
+
 #footer {
 	text-align: center;
 	font-size: 0.7em;
 	border-top: thin solid #999;
-	text-align: center;
 	padding: .5em;
 	background-color: #ddd;
 	margin: 0em;
+}
+
+#footer p.syntax {
+	text-align: left;
 }
 
 #history {

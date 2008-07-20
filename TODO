@@ -1,16 +1,10 @@
 Backend
 -------
-- Add diffs to history
-- Auto-link plain-text links
 - Wikify links
+- Auto-link plain-text links
 - Auto-insert newline after h?
 - Add section edit links ?
-
-Default theme
--------------
-- Make the form as high as possible
-- Add Tables to the CSS
-- Provide some documentation for the wiki syntax
+- Add diffs to history
 
 ExtJS theme
 -----------
