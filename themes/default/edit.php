@@ -18,7 +18,7 @@
 
 		<div id="form">
 			<form method="post" action="<?php print getPostURL(); ?>">
-				<p><textarea name="data" cols="80" rows="20" style="width: 100%"><?php print $wikiData; ?></textarea></p>
+				<p><textarea name="data" cols="80" rows="20" style="width: 100%"><?php print getRawData(); ?></textarea></p>
 				<p><input type="submit" value="publish" /></p>
 			</form>
 		</div>

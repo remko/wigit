@@ -19,11 +19,11 @@
 		</div>
 
 		<div id="content">
-			<?php print $wikiContent; ?>
+			<?php print getContent(); ?>
 		</div>
 
 		<div id="footer">
-			<p>Last modified on <?php print date("F d Y H:i:s", filemtime($wikiFile)); ?> </p>
+			<p>Last modified on <?php print date("F d Y H:i:s", filemtime(getFile())); ?> </p>
 		</div>
 	</body>
 </html>

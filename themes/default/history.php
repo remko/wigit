@@ -20,6 +20,7 @@
 		</div>
 
 		<div id="history">
+			<p>
 			<table>
 				<tr><th>Date</th><th>Author</th><th>Page</th><th>Message</th></tr>
 			<?php 
@@ -35,6 +36,7 @@
 				}
 			?>
 			</table>
+			</p>
 		</div>
 	</body>
 </html>

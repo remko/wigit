@@ -23,7 +23,7 @@
 	// Helpers
 	// --------------------------------------------------------------------------
 
-	function getHistory($file = "") {
+	function getGitHistory($file = "") {
 		$output = array();
 		git("log --pretty=format:'%H>%T>%an>%ae>%aD>%s' -- $file", $output);
 		$history = array();
@@ -120,6 +120,7 @@
 			print join("\n", $output) . "\n";
 			//print "Error code: " . $result . "\n";
 			print "</pre>";
+			return 0;
 		}
 		return 1;
 	}
@@ -156,7 +157,15 @@
 	// --------------------------------------------------------------------------
 
 	function wikify($text) {
-		// FIXME: Wikify
+		global $SCRIPT_URL;
+
+		// FIXME: Do not apply this in <pre> and <notextile> blocks.
+
+		// Linkify
+		$text = preg_replace('@[^:](https?://([-\w\.]+)+(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)?)@', '<a href="$1">$1</a>', $text);
+
+		// WikiLinkify
+		$text = preg_replace('@\[([A-Z]\w+)\]@', '<a href="' . $SCRIPT_URL . '/$1">$1</a>', $text);
 
 		// Textilify
 		$textile = new Textile();
@@ -230,6 +239,21 @@
 		return "themes/$THEME";
 	}
 
+	function getFile() {
+		global $wikiFile;
+		return $wikiFile;
+	}
+
+	function getContent() {
+		global $wikiContent;
+		return $wikiContent;
+	}
+
+	function getRawData() {
+		global $wikiData;
+		return $wikiData;
+	}
+
 	// --------------------------------------------------------------------------
 	// Initialize globals
 	// --------------------------------------------------------------------------
@@ -239,9 +263,7 @@
 	$resource = parseResource($_GET['r']);
 	$wikiPage = $resource["page"];
 	$wikiSubPage = $resource["type"];
-
 	$wikiFile = $DATA_DIR . "/" . $wikiPage;
-	$wikiCSS = $CSS;
 
 
 	// --------------------------------------------------------------------------
@@ -282,7 +304,7 @@
 	else {
 		// Global history
 		if ($wikiPage == "history") {
-			$wikiHistory = getHistory();
+			$wikiHistory = getGitHistory();
 			$wikiPage = "";
 			include(getThemeDir() . "/history.php");
 		}
@@ -315,7 +337,7 @@
 		}
 		// History
 		else if ($wikiSubPage == "history") {
-			$wikiHistory = getHistory($wikiPage);
+			$wikiHistory = getGitHistory($wikiPage);
 			include(getThemeDir() . "/history.php");
 		}
 		// Specific version

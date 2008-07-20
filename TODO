@@ -1,11 +1,9 @@
 Backend
 -------
-- Wikify links
-- Auto-link plain-text links
-- Auto-insert newline after h?
+- Auto-insert newline after h*. section headers
 - Add section edit links ?
 - Add diffs to history
 
-ExtJS theme
------------
-- Create
+Themes
+------
+Create an ExtJS theme
