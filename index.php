@@ -23,10 +23,6 @@
 	// Helpers
 	// --------------------------------------------------------------------------
 
-	function wikify($text) {
-		return $text;
-	}
-
 	function getHistory($file = "") {
 		$output = array();
 		git("log --pretty=format:'%H>%T>%an>%ae>%aD>%s' -- $file", $output);
@@ -56,11 +52,6 @@
 				);
 		}
 		return $history;
-	}
-
-	function getThemeDir() {
-		global $THEME;
-		return "themes/$THEME";
 	}
 
 	function getAuthorForUser($user) {
@@ -155,6 +146,19 @@
 		return array("page" => $page, "type" => $type);
 	}
 
+
+	// --------------------------------------------------------------------------
+	// Wikify
+	// --------------------------------------------------------------------------
+
+	function wikify($text) {
+		// FIXME: Wikify
+
+		// Textilify
+		$textile = new Textile();
+		return $textile->TextileThis($text);
+	}
+
 	// --------------------------------------------------------------------------
 	// Utility functions (for use inside templates)
 	// --------------------------------------------------------------------------
@@ -214,6 +218,11 @@
 
 	function getCSSURL() {
 		return getThemeDir() . "/style.css";
+	}
+
+	function getThemeDir() {
+		global $THEME;
+		return "themes/$THEME";
 	}
 
 	// --------------------------------------------------------------------------
@@ -284,15 +293,8 @@
 			$data = fread($handle, filesize($wikiFile));
 			fclose($handle);
 
-			// Add wiki links and other transformations
-			$wikifiedData = wikify($data);
-
-			// Textilify
-			$textile = new Textile();
-			$formattedData = $textile->TextileThis($wikifiedData);
-
 			// Put in template
-			$wikiContent = $formattedData;
+			$wikiContent = wikify($data);
 			include(getThemeDir() . "/view.php");
 		}
 		// Editing
@@ -306,32 +308,21 @@
 			$wikiData = $data;
 			include(getThemeDir() . "/edit.php");
 		}
+		// History
 		else if ($wikiSubPage == "history") {
 			$wikiHistory = getHistory($wikiPage);
 			include(getThemeDir() . "/history.php");
 		}
-		else {
-			// Try commit.
-			// FIXME: Try to put this in an else if
+		// Specific version
+		else if (eregi("[0-9A-F]{20,20}", $wikiSubPage)) {
 			$output = array();
-			if (git("cat-file -p " . $wikiSubPage . ":$wikiPage", $output)) {
-				$data = join("\n", $output);
-				// FIXME Factor this out
-				// Add wiki links and other transformations
-				$wikifiedData = wikify($data);
-
-				// Textilify
-				$textile = new Textile();
-				$formattedData = $textile->TextileThis($wikifiedData);
-
-				// Put in template
-				// FIXME: Remove edit links
-				$wikiContent = $formattedData;
-				include(getThemeDir() . "/view.php");
+			if (!git("cat-file -p " . $wikiSubPage . ":$wikiPage", $output)) {
 				return;
 			}
-
-			// Fallback
+			$wikiContent = wikify(join("\n", $output));
+			include(getThemeDir() . "/view.php");
+		}
+		else {
 			print "Unknow subpage: " . $wikiSubPage;
 		}
 	}

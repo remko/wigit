@@ -1,7 +1,5 @@
 Backend
 -------
-- Try to parse page in history, and link to it
-- Add link to retrieve a revision of a page
 - Add diffs to history
 - Auto-link plain-text links
 - Wikify links
