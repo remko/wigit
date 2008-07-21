@@ -98,13 +98,20 @@ acronym, abbr {
 	text-align: center;
 	font-size: 0.7em;
 	border-top: thin solid #999;
-	padding: .5em;
+	padding-top: .5em;
+	padding-bottom: .2em;
 	background-color: #ddd;
 	margin: 0em;
 }
 
 #footer p.syntax {
 	text-align: left;
+}
+
+#plug {
+	text-align: right;
+	font-size: 0.7em;
+	margin-top: .5em;
 }
 
 #history {

@@ -23,7 +23,15 @@
 		</div>
 
 		<div id="footer">
-			<p>Last modified on <?php print date("F d Y H:i:s", filemtime(getFile())); ?> </p>
+			<p>
+				Last modified on <?php print date("F d Y H:i:s", filemtime(getFile())); ?> 
+			</p>
+		</div>
+
+		<div id="plug">
+			<p>
+				Powered by <a href="http://el-tramo.be/software/wigit">WiGit</a>
+			</p>
 		</div>
 	</body>
 </html>
