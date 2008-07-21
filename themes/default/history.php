@@ -16,7 +16,6 @@
 
 		<div id="header">
 			<h1 id="title"><?php print $historyTitle ?></h1>
-			<p>[ <a href="<?php print getViewURL(getPage()); ?>">view</a> ]</p>
 		</div>
 
 		<div id="history">
