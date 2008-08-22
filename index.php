@@ -100,7 +100,7 @@
 				}
 			}
 		}
-		return $_SERVER['PHP_AUTH_USER'];;
+		return $_SERVER['PHP_AUTH_USER'];
 	}
 
 	function git($command, &$output = "") {
