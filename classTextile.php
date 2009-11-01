@@ -249,7 +249,7 @@ class Textile
 		$this->pnct = '[\!"#\$%&\'()\*\+,\-\./:;<=>\?@\[\\\]\^_`{\|}\~]';
 		$this->urlch = '[\w"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
 
-		$this->url_schemes = array('http','https','ftp','mailto');
+		$this->url_schemes = array('http','https','ftp','mailto','file');
 
 		$this->btag = array('bq', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', 'p');
 
