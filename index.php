@@ -168,7 +168,7 @@
 		// FIXME: Do not apply this in <pre> and <notextile> blocks.
 
 		// Linkify
-		$text = preg_replace('@([^:])(https?://([-\w\.]+)+(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)?)@', '$1<a href="$2">$2</a>', $text);
+		$text = preg_replace('@([^:])(https?://([-\w\.]+)+(:\d+)?(/([%-\w/_\.]*(\?\S+)?)?)?)@', '$1<a href="$2">$2</a>', $text);
 
 		// WikiLinkify
 		$text = preg_replace('@\[([A-Z]\w+)\]@', '<a href="' . $SCRIPT_URL . '/$1">$1</a>', $text);
