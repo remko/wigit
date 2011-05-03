@@ -5,6 +5,8 @@
  * See COPYING for details
  */
 
+error_reporting(E_ALL &~E_NOTICE);
+
 require_once('classTextile.php');
 
 // --------------------------------------------------------------------------
@@ -131,7 +133,7 @@ function git($command, &$output = "") {
 }
 
 function sanitizeName($name) {
-    return ereg_replace("[^A-Za-z0-9]", "_", $name);
+    return preg_replace("/[^A-Za-z0-9]/", "_", $name);
 }
 
 function parseResource($resource) {
@@ -140,11 +142,11 @@ function parseResource($resource) {
     $matches = array();
     $page = "";
     $type = "";
-    if (ereg("/(.*)/(.*)", $resource, $matches)) {
+    if (preg_match("|/(.*)/(.*)|", $resource, $matches)) {
         $page = sanitizeName($matches[1]);
         $type = $matches[2];
     }
-    else if (ereg("/(.*)", $resource, $matches)) {
+    else if (preg_match("|/(.*)|", $resource, $matches)) {
         $page = sanitizeName($matches[1]);
     }
     if ($page == "") {
@@ -347,7 +349,7 @@ else {
         include(getThemeDir() . "/history.php");
     }
     // Specific version
-    else if (eregi("[0-9A-F]{20,20}", $wikiSubPage)) {
+    else if (preg_match("/[0-9A-F]{20,20}/", $wikiSubPage)) {
         $output = array();
         if (!git("cat-file -p " . $wikiSubPage . ":$wikiPage", $output)) {
             return;
