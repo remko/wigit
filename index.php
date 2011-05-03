@@ -34,6 +34,11 @@ if (substr(sprintf('%o', fileperms($DATA_DIR)), -3) < 777) {
     exit($DATA_DIR . ' must be writable');
 }
 
+if (!isset($_GET['r'])) {
+    header('Location: index.php?r=/');
+    exit;
+}
+
 // --------------------------------------------------------------------------
 // Helpers
 // --------------------------------------------------------------------------
