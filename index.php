@@ -36,7 +36,6 @@ if (substr(sprintf('%o', fileperms($DATA_DIR)), -3) < 777) {
 
 if (!isset($_GET['r'])) {
     header('Location: index.php?r=/');
-    exit;
 }
 
 // --------------------------------------------------------------------------
@@ -361,7 +360,7 @@ else {
         include(getThemeDir() . "/history.php");
     }
     // Specific version
-    else if (preg_match("/[0-9A-F]{20,20}/", $wikiSubPage)) {
+    else if (preg_match("/([0-9A-F]{20,20})/i", $wikiSubPage)) {
         $output = array();
         if (!git("cat-file -p " . $wikiSubPage . ":$wikiPage", $output)) {
             return;
