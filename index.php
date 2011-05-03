@@ -26,6 +26,13 @@ if (!isset($DEFAULT_AUTHOR)) { $DEFAULT_AUTHOR = 'Anonymous <anonymous@wigit>'; 
 if (!isset($AUTHORS)) { $AUTHORS = array(); }
 if (!isset($THEME)) { $THEME = "default"; }
 
+if (!file_exists($DATA_DIR)) {
+    exit($DATA_DIR . ' is not present');
+}
+
+if (substr(sprintf('%o', fileperms($DATA_DIR)), -3) < 777) {
+    exit($DATA_DIR . ' must be writable');
+}
 
 // --------------------------------------------------------------------------
 // Helpers
