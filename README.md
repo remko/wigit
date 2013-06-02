@@ -4,7 +4,7 @@
 
 WiGit is a simple Wiki written in PHP, using [Git](http://git.or.cz/) as 
 a backend for tracking changes. Besides Git, this wiki makes use of 
-[Textile] (http://textile.sitemonks.com) for marking up text. 
+[Textile](http://textile.sitemonks.com) for marking up text. 
 
 
 ## Features
