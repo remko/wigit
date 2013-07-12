@@ -55,7 +55,7 @@
 					<li><code>%{color:red}Red% text</code> &rarr; <span style='color:red'>Red</span> text</li>
 				</ul>
 				For more markup styles, see the 
-				<a href="http://hobix.com/textile/">Textile reference</a>.
+				<a href="http://redcloth.org/hobix.com/textile/">Textile reference</a>.
 			</p>
 		</div>
 
