@@ -1,4 +1,4 @@
-# [WiGit: A Git-based Wiki](http://el-tramo.be/software/wigit)
+# [WiGit: A Git-based Wiki](https://el-tramo.be/wigit)
 
 ## About
 
