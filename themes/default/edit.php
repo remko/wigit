@@ -14,6 +14,8 @@
 
 		<div id="header">
 			<h1 id="title">Editing <?php print getPage() ?></h1>
+			<p>[ <a href="<?php print getViewURL()?>">view</a> |
+				<a href="<?php print getHistoryURL()?>">history</a> ]</p>
 		</div>
 
 		<div id="form">
