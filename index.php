@@ -132,7 +132,7 @@
 	}
 
 	function sanitizeName($name) {
-		return ereg_replace("[^\w-\.]", "_", $name);
+		return preg_replace("[^A-Za-z0-9_-\.]", "_", $name);
 	}
 
 	function parseResource($resource) {
