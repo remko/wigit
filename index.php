@@ -22,8 +22,8 @@
 	if (!isset($DATA_DIR)) { $DATA_DIR = "data"; }
 	if (!isset($DEFAULT_PAGE)) { $DEFAULT_PAGE = "Home"; }
 	if (!isset($DEFAULT_AUTHOR)) { $DEFAULT_AUTHOR = 'Anonymous <anonymous@wigit>'; }
-  if (!isset($AUTHORS)) { $AUTHORS = array(); }
-  if (!isset($THEME)) { $THEME = "default"; }
+	if (!isset($AUTHORS)) { $AUTHORS = array(); }
+	if (!isset($THEME)) { $THEME = "default"; }
 
 
 	// --------------------------------------------------------------------------
