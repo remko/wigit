@@ -27,8 +27,11 @@
 	$DEFAULT_AUTHOR = 'Anonymous <anonymous@wigit>';
 
 	// Set the mappings from HTTP username to Git commit author.
-  $AUTHORS = array(
-    "remko" => "Remko Tronçon <git@el-tramo.be>",
-    "guest" => "Guest <guest@el-tramo.be>"
-  );
+	$AUTHORS = array(
+		"remko" => "Remko Tronçon <git@el-tramo.be>",
+		"guest" => "Guest <guest@el-tramo.be>"
+	);
+	
+	// Set the name of the theme to be used
+	$THEME = "default";
 ?>
