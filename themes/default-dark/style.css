@@ -1,0 +1,33 @@
+/* Import  */
+@import url("../default/style.css");
+
+body, textarea {
+	background: #333;
+    color: #ccc;
+}
+
+textarea {
+	border: thin solid #999;
+}
+
+#header {
+	background-color: #222;
+}
+
+a {
+	color: #08b;
+}
+
+#footer {
+	background-color: #222;
+	border-top: thin solid #000;
+}
+
+#header h1 {
+	font-size: 1.6em;
+}
+
+#content pre {
+    background-color: #444;
+    border: 1px solid #555;
+}
