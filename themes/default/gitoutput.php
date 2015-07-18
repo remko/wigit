@@ -19,18 +19,20 @@
 		<div id="header">
 			<h1 id="title"><?php print getPage() ?></h1>
 			<p>[ 
-					<a href="<?php print getEditURL()?>">edit</a>
+					<a href="<?php print getViewURL()?>">view</a>
 					| <a href="<?php print getHistoryURL()?>">history</a>
 				]</p>
 		</div>
 
 		<div id="content">
+			<h2>Git action "<?php print getGitAction(); ?>" output</h2>
+			<bre>
 			<?php print getContent(); ?>
 		</div>
 
 		<div id="footer">
 			<p>
-				Last modified on <?php print date("F d Y H:i:s", filemtime(getFile())); ?> 
+				Last modified on <?php print date("F d Y H:i:s"); ?> 
 			</p>
 		</div>
 

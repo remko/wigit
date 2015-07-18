@@ -10,6 +10,10 @@
 		<div id="navigation">
 			<p><a href="<?php print getHomeURL() ?>">Home</a> 
 			| <a href="<?php print getGlobalHistoryURL() ?>">History</a>
+<?php if ($GIT_REMOTE != "") { ?>
+					| <a href="<?php print getPullURL()?>">pull</a>
+					| <a href="<?php print getPushURL()?>">push</a>
+<?php } ?>
 			<?php if (getUser() != "") { ?>| Logged in as <?php print getUser(); } ?>
 			</p>
 		</div>
