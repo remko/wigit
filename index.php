@@ -109,12 +109,28 @@
 		$gitDir = dirname(__FILE__) . "/$DATA_DIR/.git";
 		$gitWorkTree = dirname(__FILE__) . "/$DATA_DIR";
 		// Workaround for git version < 1.7.7.2 (http://stackoverflow.com/a/9747584/2587532)
-		if (preg_match("/^(pull|push)/", $command))
+		$gitVersion = exec("git --version | awk '{print $3}'");
+		if (version_compare($gitVersion, "1.7.7.2", "<") && preg_match("/^(pull)/", $command))
 		{
-			$gitCommand = "$GIT --git-dir=$gitDir $command";
+			$output = array();
+			// split "pull remote branch" into separat elements
+			$elements = explode(" ", $command);
+			// execute fetch command
+			$command_part1 = "fetch ".$elements[1];
+			$result_part1 = git($command_part1, $output);
+			// execute merge command
+			$command_part2 = "merge ".$elements[1]."/".$elements[2];
+			$result_part2 = git($command_part2, $output);
+
+			// check result
+			if ($result_part1 == 1 && $result_part2 == 1) {
+				return 1;
+			}
+			else {
+				return 0;
+			}
 		}
-		else
-		{
+		else {
 			$gitCommand = "$GIT --git-dir=$gitDir --work-tree=$gitWorkTree $command";
 		}
 		$output = array();
