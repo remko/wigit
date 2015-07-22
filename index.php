@@ -22,8 +22,8 @@
 	if (!isset($DATA_DIR)) { $DATA_DIR = "data"; }
 	if (!isset($DEFAULT_PAGE)) { $DEFAULT_PAGE = "Home"; }
 	if (!isset($DEFAULT_AUTHOR)) { $DEFAULT_AUTHOR = 'Anonymous <anonymous@wigit>'; }
-  if (!isset($AUTHORS)) { $AUTHORS = array(); }
-  if (!isset($THEME)) { $THEME = "default"; }
+	if (!isset($AUTHORS)) { $AUTHORS = array(); }
+	if (!isset($THEME)) { $THEME = "default"; }
 
 
 	// --------------------------------------------------------------------------
@@ -108,7 +108,31 @@
 
 		$gitDir = dirname(__FILE__) . "/$DATA_DIR/.git";
 		$gitWorkTree = dirname(__FILE__) . "/$DATA_DIR";
-		$gitCommand = "$GIT --git-dir=$gitDir --work-tree=$gitWorkTree $command";
+		// Workaround for git version < 1.7.7.2 (http://stackoverflow.com/a/9747584/2587532)
+		$gitVersion = exec("git --version | awk '{print $3}'");
+		if (version_compare($gitVersion, "1.7.7.2", "<") && preg_match("/^(pull)/", $command))
+		{
+			$output = array();
+			// split "pull remote branch" into separat elements
+			$elements = explode(" ", $command);
+			// execute fetch command
+			$command_part1 = "fetch ".$elements[1];
+			$result_part1 = git($command_part1, $output);
+			// execute merge command
+			$command_part2 = "merge ".$elements[1]."/".$elements[2];
+			$result_part2 = git($command_part2, $output);
+
+			// check result
+			if ($result_part1 == 1 && $result_part2 == 1) {
+				return 1;
+			}
+			else {
+				return 0;
+			}
+		}
+		else {
+			$gitCommand = "$GIT --git-dir=$gitDir --work-tree=$gitWorkTree $command";
+		}
 		$output = array();
 		$result;
 		// FIXME: Only do the escaping and the 2>&1 if we're not in safe mode 
@@ -256,9 +280,26 @@
 		return $wikiContent;
 	}
 
+	function getGitAction() {
+		global $wikiGitAction;
+		return $wikiGitAction;
+	}
+
 	function getRawData() {
 		global $wikiData;
 		return $wikiData;
+	}
+
+	function getPullURL() {
+		global $SCRIPT_URL;
+		$page = getPage();
+		return "$SCRIPT_URL/$page/pull";
+	}
+
+	function getPushURL() {
+		global $SCRIPT_URL;
+		$page = getPage();
+		return "$SCRIPT_URL/$page/push";
 	}
 
 	// --------------------------------------------------------------------------
@@ -309,8 +350,22 @@
 	}
 	// Get operation
 	else {
+		// Pull git changes from remote repository
+		if ($wikiSubPage == "pull") {
+			if (!git("pull $GIT_REMOTE $GIT_BRANCH", $wikiContent)) { return; }
+			$wikiContent = implode("<br>\n", $wikiContent);
+			$wikiGitAction = "pull $GIT_REMOTE $GIT_BRANCH";
+			include(getThemeDir() . "/gitoutput.php");
+		}
+		// Pull git changes to remote repository
+		else if ($wikiSubPage == "push") {
+			if (!git("push $GIT_REMOTE $GIT_BRANCH", $wikiContent)) { return; }
+			$wikiContent = implode("<br>\n", $wikiContent);
+			$wikiGitAction = "push $GIT_REMOTE $GIT_BRANCH";
+			include(getThemeDir() . "/gitoutput.php");
+		}
 		// Global history
-		if ($wikiPage == "history") {
+		else if ($wikiPage == "history") {
 			$wikiHistory = getGitHistory();
 			$wikiPage = "";
 			include(getThemeDir() . "/history.php");
