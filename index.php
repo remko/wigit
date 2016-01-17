@@ -202,7 +202,7 @@
 
 		// Textilify
 		$textile = new \Netcarver\Textile\Parser();
-		return $textile->textileRestricted($text);
+		return $textile->textileThis($text);
 	}
 
 	// --------------------------------------------------------------------------
