@@ -6,7 +6,9 @@
 	 * See COPYING for details
 	 */
 
-	require_once('classTextile.php');
+	require 'vendor/netcarver/textile/src/Netcarver/Textile/Parser.php';
+	require 'vendor/netcarver/textile/src/Netcarver/Textile/DataBag.php';
+	require 'vendor/netcarver/textile/src/Netcarver/Textile/Tag.php';
 
 	// --------------------------------------------------------------------------
 	// Configuration
@@ -199,8 +201,8 @@
 		$text = preg_replace('@\[([\w-\.]+)\|([\w-\.\s]+)\]@', '<a href="' . $SCRIPT_URL . '/$1">$2</a>', $text);
 
 		// Textilify
-		$textile = new Textile();
-		return $textile->TextileThis($text);
+		$textile = new \Netcarver\Textile\Parser();
+		return $textile->textileRestricted($text);
 	}
 
 	// --------------------------------------------------------------------------
