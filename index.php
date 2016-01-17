@@ -165,11 +165,11 @@
 		$matches = array();
 		$page = "";
 		$type = "";
-		if (ereg("/(.*)/(.*)", $resource, $matches)) {
+		if (preg_match("~/(.*)/(.*)~", $resource, $matches)) {
 			$page = sanitizeName($matches[1]);
 			$type = $matches[2];
 		}
-		else if (ereg("/(.*)", $resource, $matches)) {
+		else if (preg_match("~/(.*)~", $resource, $matches)) {
 			$page = sanitizeName($matches[1]);
 		}
 		if ($page == "") {
