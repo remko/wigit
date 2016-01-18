@@ -43,7 +43,7 @@ your webserver. E.g.,
 			RewriteEngine On
 			RewriteBase /wigit/
 			RewriteCond %{REQUEST_FILENAME} !-f
-			RewriteRule (.*) /wigit/index.php?r=$1 [L] 
+			RewriteRule (.*) /wigit/index.php?r=/$1 [L] 
 		</IfModule>
 
 - For lighttpd, add the following to your config file:
