@@ -1,4 +1,4 @@
-⚠️ The implementation of this project is very naive (using processes etc.), and has not gone through any security review. I would be surprised if it still works, and if it does, I wouldn't trust it if I were you. Leaving it here for historical purpose only.
+**⚠️ The implementation of this project is very naive (using processes etc.), and has not gone through any security review. I would be surprised if it still works, and if it does, I wouldn't trust it if I were you. Leaving it here for historical purpose only.**
 
 # [WiGit: A Git-based Wiki](https://el-tramo.be/wigit)
 
